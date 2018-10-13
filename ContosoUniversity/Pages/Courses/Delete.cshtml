@@ -24,6 +24,12 @@
         <dd>
             @Html.DisplayFor(model => model.Course.Credits)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Course.Department)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Course.Department.DepartmentID)
+        </dd>
     </dl>
     
     <form method="post">

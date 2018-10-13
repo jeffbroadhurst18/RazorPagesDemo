@@ -41,7 +41,7 @@ namespace ContosoUniversity.Pages.Students
 
 			CurrentFilter = searchString;
 
-			IQueryable<Student> studentIQ = _context.Student; //IQueryable generic form of list but not executed until 
+			IQueryable<Student> studentIQ = _context.Students; //IQueryable generic form of list but not executed until 
 																//it is converted to a List.
 
 			if (!string.IsNullOrEmpty(searchString))
@@ -70,6 +70,12 @@ namespace ContosoUniversity.Pages.Students
 			//Student = await studentIQ.AsNoTracking().Select(s => s).ToListAsync(); 
 			//Actually sends the query to the database and populates the model.
 			//pageIndex != null ? pageIndex : 1;
+
+			var depts = _context.Departments;
+			foreach(Department d in depts)
+			{
+				_context.Entry(d).Collection(p => p.Courses).Load();
+			}
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿@page
-@model ContosoUniversity.Pages.Courses.IndexModel
+@model ContosoUniversity.Pages.Courses.IndexSelectModel
 
 @{
-    ViewData["Title"] = "Courses";
+    ViewData["Title"] = "IndexSelect";
 }
 
-<h2>Courses</h2>
+<h2>IndexSelect</h2>
 
 <p>
     <a asp-page="Create">Create New</a>
@@ -13,35 +13,29 @@
 <table class="table">
     <thead>
         <tr>
-			<th>
-				@Html.DisplayNameFor(model => model.Course[0].CourseID)
-			</th>
-			<th>
-                @Html.DisplayNameFor(model => model.Course[0].Title)
+            <th>
+                @Html.DisplayNameFor(model => model.CourseViewModel[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course[0].Credits)
+                @Html.DisplayNameFor(model => model.CourseViewModel[0].Credits)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Course[0].Department)
+                @Html.DisplayNameFor(model => model.CourseViewModel[0].DepartmentName)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Course) {
+@foreach (var item in Model.CourseViewModel) {
         <tr>
-			<td>
-				@Html.DisplayFor(modelItem => item.CourseID)
-			</td>
-			<td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Credits)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Department.Name)
+                @Html.DisplayFor(modelItem => item.DepartmentName)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.CourseID">Edit</a> |

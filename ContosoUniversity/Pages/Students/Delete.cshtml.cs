@@ -30,7 +30,7 @@ namespace ContosoUniversity.Pages.Students
                 return NotFound();
             }
 
-            Student = await _context.Student.AsNoTracking().FirstOrDefaultAsync(m => m.ID == id);
+            Student = await _context.Students.AsNoTracking().FirstOrDefaultAsync(m => m.ID == id);
 
             if (Student == null)
             {
@@ -53,7 +53,7 @@ namespace ContosoUniversity.Pages.Students
                 return NotFound();
             }
 
-            var student = await _context.Student.AsNoTracking().FirstOrDefaultAsync(m => m.ID == id);
+            var student = await _context.Students.AsNoTracking().FirstOrDefaultAsync(m => m.ID == id);
 			//AsNoTrcking only stops tracking for updates. You can still explicitly Remove the entity.
 
 			if (student == null)
@@ -64,7 +64,7 @@ namespace ContosoUniversity.Pages.Students
 			try
             {
 				//we know it exists so we can delete it
-                _context.Student.Remove(student);
+                _context.Students.Remove(student);
                 await _context.SaveChangesAsync();
 				return RedirectToPage("./Index");
 			}

@@ -24,7 +24,7 @@ namespace ContosoUniversity.Pages
 
 		public async Task OnGetAsync() //same as return void
 		{
-			IQueryable<EnrollmentDateGroup> data = _context.Student.GroupBy(x => x.EnrollmentDate)
+			IQueryable<EnrollmentDateGroup> data = _context.Students.GroupBy(x => x.EnrollmentDate)
 				.Select(y => new EnrollmentDateGroup
 				{
 					EnrollmentDate = y.Key,
@@ -33,7 +33,7 @@ namespace ContosoUniversity.Pages
 
 			Student = await data.AsNoTracking().ToListAsync();
 
-			IQueryable<EnrollmentDateGroup> data2 = _context.Student.GroupBy(y => y.FirstMidName + " " + y.LastName)
+			IQueryable<EnrollmentDateGroup> data2 = _context.Students.GroupBy(y => y.FirstMidName + " " + y.LastName)
 			.Select(x => new EnrollmentDateGroup
 			{
 				FullName = x.Key,

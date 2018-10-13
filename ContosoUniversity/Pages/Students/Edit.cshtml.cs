@@ -26,7 +26,7 @@ namespace ContosoUniversity.Pages.Students
                 return NotFound();
             }
 
-			Student = await _context.Student.FindAsync(id); //Find method looks for a single instance of the key value.
+			Student = await _context.Students.FindAsync(id); //Find method looks for a single instance of the key value.
 
             if (Student == null)
             {
@@ -42,7 +42,7 @@ namespace ContosoUniversity.Pages.Students
                 return Page();
             }
 
-			var studentToUpdate = await _context.Student.FindAsync(id);
+			var studentToUpdate = await _context.Students.FindAsync(id);
 
 			if (await TryUpdateModelAsync(studentToUpdate, "student", s => s.FirstMidName, s => s.LastName, s => s.EnrollmentDate))
 			{
@@ -57,7 +57,7 @@ namespace ContosoUniversity.Pages.Students
 
         private bool StudentExists(int id)
         {
-            return _context.Student.Any(e => e.ID == id);
+            return _context.Students.Any(e => e.ID == id);
         }
     }
 }

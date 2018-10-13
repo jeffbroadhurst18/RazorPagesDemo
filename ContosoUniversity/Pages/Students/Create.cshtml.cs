@@ -24,6 +24,8 @@ namespace ContosoUniversity.Pages.Students
 
         public async Task<IActionResult> OnPostAsync()
         {
+			
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -36,7 +38,7 @@ namespace ContosoUniversity.Pages.Students
 			if (await TryUpdateModelAsync(emptyStudent,"student",s => s.FirstMidName, s=> s.LastName, s => s.EnrollmentDate))
 			{
 				//above code updates the model but does not persist to the database
-				_context.Student.Add(emptyStudent); //add to context
+				_context.Students.Add(emptyStudent); //add to context
 				await _context.SaveChangesAsync();//persist to database
 				return RedirectToPage("./Index");
 			}
