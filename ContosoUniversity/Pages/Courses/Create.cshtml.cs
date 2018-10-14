@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,18 +6,19 @@ using ContosoUniversity.Models;
 
 namespace ContosoUniversity.Pages.Courses
 {
-    public class CreateModel : PageModel
+	public class CreateModel : DepartmentNamePageModel //which derives from PageModel
     {
-        private readonly ContosoUniversity.Models.SchoolContext _context;
+        private readonly SchoolContext _context;
 
-        public CreateModel(ContosoUniversity.Models.SchoolContext context)
+        public CreateModel(SchoolContext context)
         {
             _context = context;
         }
 
         public IActionResult OnGet()
         {
-        ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "DepartmentID");
+			// ViewData["DepartmentID"] = new SelectList(_context.Departments, "DepartmentID", "DepartmentID");
+			PopulateDepartmentsDropDownList(_context);
             return Page();
         }
 
@@ -34,10 +32,17 @@ namespace ContosoUniversity.Pages.Courses
                 return Page();
             }
 
-            _context.Courses.Add(Course);
-            await _context.SaveChangesAsync();
+			var emptyCourse = new Course();
+			if (await TryUpdateModelAsync<Course>(   //updates emptyCourse with values
+				emptyCourse,"course", s=> s.CourseID, s => s.DepartmentID, s => s.Title, s => s.Credits))
+			{
+				_context.Courses.Add(emptyCourse);
+				await _context.SaveChangesAsync();
+				return RedirectToPage("./Index");
+			}
 
-            return RedirectToPage("./Index");
+			PopulateDepartmentsDropDownList(_context, emptyCourse.DepartmentID);
+			return Page();
         }
     }
 }

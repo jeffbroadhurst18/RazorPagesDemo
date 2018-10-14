@@ -7,19 +7,19 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ContosoUniversity.Models;
 
-namespace ContosoUniversity.Pages.Courses
+namespace ContosoUniversity.Pages.Departments
 {
     public class DeleteModel : PageModel
     {
-        private readonly SchoolContext _context;
+        private readonly ContosoUniversity.Models.SchoolContext _context;
 
-        public DeleteModel(SchoolContext context)
+        public DeleteModel(ContosoUniversity.Models.SchoolContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public Course Course { get; set; }
+        public Department Department { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -28,11 +28,10 @@ namespace ContosoUniversity.Pages.Courses
                 return NotFound();
             }
 
-            Course = await _context.Courses.AsNoTracking()
-                .Include(c => c.Department)
-				.FirstOrDefaultAsync(m => m.CourseID == id);
+            Department = await _context.Departments
+                .Include(d => d.Administrator).FirstOrDefaultAsync(m => m.DepartmentID == id);
 
-            if (Course == null)
+            if (Department == null)
             {
                 return NotFound();
             }
@@ -46,12 +45,11 @@ namespace ContosoUniversity.Pages.Courses
                 return NotFound();
             }
 
-			Course = await _context.Courses.AsNoTracking().FirstOrDefaultAsync(m => m.CourseID == id);
-			//As no tracking improves performance
+            Department = await _context.Departments.FindAsync(id);
 
-            if (Course != null)
+            if (Department != null)
             {
-                _context.Courses.Remove(Course);
+                _context.Departments.Remove(Department);
                 await _context.SaveChangesAsync();
             }
 
