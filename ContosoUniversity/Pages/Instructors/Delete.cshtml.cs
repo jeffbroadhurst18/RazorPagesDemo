@@ -1,58 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using ContosoUniversity.Models;
+using System.Linq;
 
 namespace ContosoUniversity.Pages.Instructors
 {
-    public class DeleteModel : PageModel
-    {
-        private readonly ContosoUniversity.Models.SchoolContext _context;
+	public class DeleteModel : PageModel
+	{
+		private readonly SchoolContext _context;
 
-        public DeleteModel(ContosoUniversity.Models.SchoolContext context)
-        {
-            _context = context;
-        }
+		public DeleteModel(SchoolContext context)
+		{
+			_context = context;
+		}
 
-        [BindProperty]
-        public Instructor Instructor { get; set; }
+		[BindProperty]
+		public Instructor Instructor { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+		public async Task<IActionResult> OnGetAsync(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
 
-            Instructor = await _context.Instructors.FirstOrDefaultAsync(m => m.ID == id);
+			Instructor = await _context.Instructors.FirstOrDefaultAsync(m => m.ID == id);
 
-            if (Instructor == null)
-            {
-                return NotFound();
-            }
-            return Page();
-        }
+			if (Instructor == null)
+			{
+				return NotFound();
+			}
+			return Page();
+		}
 
-        public async Task<IActionResult> OnPostAsync(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+		public async Task<IActionResult> OnPostAsync(int? id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
 
-            Instructor = await _context.Instructors.FindAsync(id);
+			//Get the instructor with associated data
+			//If you don't include CourseAssignments then they won't be deleted when the instructor is deleted.
 
-            if (Instructor != null)
-            {
-                _context.Instructors.Remove(Instructor);
-                await _context.SaveChangesAsync();
-            }
+			Instructor instructor = await _context.Instructors.Include(i => i.CourseAssignments).SingleAsync(i => i.ID == id);
 
-            return RedirectToPage("./Index");
-        }
-    }
+			// Get any department records containing this instructor
+			var departments = await _context.Departments.Where(d => d.InstructorID == id).ToListAsync();
+
+			//The InstructorID represents the administrator for the department
+			foreach (var department in departments)
+			{
+				department.InstructorID = null;
+			}
+
+			_context.Instructors.Remove(Instructor);
+			await _context.SaveChangesAsync();
+			return RedirectToPage("./Index");
+		}
+	}
 }
