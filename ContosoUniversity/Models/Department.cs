@@ -22,7 +22,10 @@ namespace ContosoUniversity.Models
 		public DateTime StartDate { get; set; }
 
 		public int? InstructorID { get; set; } //saves having to load whole Instructor entity when saving.
-		                                       //property is nullable so instructor isn't deleted when department is deleted.
+											   //property is nullable so instructor isn't deleted when department is deleted.
+
+		[Timestamp] //Specifies the database field will be of type RowVersion
+		public byte[] RowVersion { get; set; }
 
 		public Instructor Administrator { get; set; }  //Administrator is ALWAYS an instructor
 		public ICollection<Course> Courses { get; set; }
